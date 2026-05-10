@@ -7,7 +7,7 @@ import {
   FileSearch, PieChart, Users, Sparkles, ShieldCheck, Globe, Zap
 } from 'lucide-react';
 
-// KONFIGURASI API - Menggunakan URL Vercel Backend (BUKAN LOCALHOST!)
+// KONFIGURASI API - HARDCORDED KE VERCEL AGAR AMAN DARI ERROR ENV
 const API_URL = "https://lexi-med-ai-llm-rs-back-end.vercel.app/api";
 
 export default function Login() {
@@ -38,10 +38,13 @@ export default function Login() {
     const username = formData.get('username').trim();
 
     try {
-      // PERBAIKAN KRUSIAL: Menembak langsung ke API Cloud Vercel
+      // API_URL SUDAH PASTI KE VERCEL CLOUD
       const response = await fetch(`${API_URL}/token`, {
         method: "POST",
         body: formData,
+        headers: {
+          "Accept": "application/json"
+        }
       });
 
       const data = await response.json();
@@ -54,7 +57,6 @@ export default function Login() {
         throw new Error(`Akses Ditolak: Akun Anda adalah ${data.user.role.toUpperCase()}`);
       }
 
-      // Simpan Sesi Login
       localStorage.setItem('access_token', data.access_token);
       
       const userData = {
@@ -66,7 +68,6 @@ export default function Login() {
       localStorage.setItem('user', JSON.stringify(userData));
       setLoginSuccess(true);
       
-      // Navigasi ke Dashboard masing-masing role
       setTimeout(() => {
         const routes = {
           perawat: '/dashboard-perawat',
@@ -80,6 +81,7 @@ export default function Login() {
       }, 1500);
       
     } catch (err) {
+      console.error("Login Error:", err);
       setError(err.message === "Failed to fetch" 
         ? "Gagal terhubung ke Cloud Server. Periksa koneksi internet Anda." 
         : err.message);
@@ -140,10 +142,7 @@ export default function Login() {
           </div>
 
           <div className="relative h-64 flex items-center justify-center">
-             <motion.div
-               animate={{ rotate: [0, 5, 0, -5, 0], y: [0, -15, 0] }}
-               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-             >
+             <motion.div animate={{ rotate: [0, 5, 0, -5, 0], y: [0, -15, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}>
                 <img src="/logo.png" className="w-56 h-56 object-contain drop-shadow-[0_0_60px_rgba(16,185,129,0.4)]" alt="LexiMed" />
              </motion.div>
              <div className="absolute w-72 h-72 border border-emerald-500/20 rounded-full animate-pulse"></div>
@@ -158,12 +157,8 @@ export default function Login() {
         {/* 🔐 RIGHT PANEL: LOGIN FORM (RESPONSIVE) */}
         <div className="p-6 md:p-12 lg:p-20 flex flex-col justify-center bg-[#0f172a]/40 relative">
           
-          {/* Mobile Header */}
           <div className="lg:hidden flex flex-col items-center gap-4 mb-12 text-center">
-             <motion.img 
-               animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity }}
-               src="/logo.png" className="w-20 h-20 drop-shadow-2xl" 
-             />
+             <motion.img animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity }} src="/logo.png" className="w-20 h-20 drop-shadow-2xl" />
              <h1 className="text-5xl font-black text-white tracking-tighter italic">LexiMed<span className="text-emerald-500">.ai</span></h1>
           </div>
 
@@ -176,109 +171,56 @@ export default function Login() {
 
           <form onSubmit={handleLogin} className="space-y-8">
             
-            {/* 🎭 ROLE PICKER - ULTRA RESPONSIVE GRID */}
             <div className="grid grid-cols-3 gap-2 p-1.5 bg-white/5 rounded-[2.5rem] border border-white/5">
                {roleList.map((r) => (
                  <button 
-                   key={r.id} type="button" 
-                   onClick={() => setRole(r.id)}
+                   key={r.id} type="button" onClick={() => setRole(r.id)}
                    className={`flex flex-col items-center gap-2 py-5 rounded-2xl transition-all duration-500 relative group overflow-hidden ${
-                     role === r.id 
-                     ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/40' 
-                     : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
+                     role === r.id ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/40' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
                    }`}
                  >
-                   <div className={`${role === r.id ? 'scale-110' : 'scale-100 group-hover:scale-110'} transition-transform`}>
-                    {r.icon}
-                   </div>
+                   <div className={`${role === r.id ? 'scale-110' : 'scale-100 group-hover:scale-110'} transition-transform`}>{r.icon}</div>
                    <span className="text-[10px] font-black uppercase tracking-tighter">{r.label}</span>
-                   {role === r.id && (
-                      <motion.div layoutId="activeRole" className="absolute inset-0 bg-white/10" />
-                   )}
+                   {role === r.id && <motion.div layoutId="activeRole" className="absolute inset-0 bg-white/10" />}
                  </button>
                ))}
             </div>
 
-            {/* ⌨️ INPUT FIELDS */}
             <div className="space-y-5">
               <div className="relative group">
-                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-emerald-400 transition-colors">
-                  <UserCircle2 size={22} />
-                </div>
-                <input 
-                  name="username" type="text" placeholder={`ID ${role.toUpperCase()}`} required
-                  className="w-full bg-white/5 border border-white/10 rounded-[1.5rem] py-6 pl-16 pr-6 text-white outline-none focus:border-emerald-500 focus:bg-white/10 transition-all font-black text-lg placeholder:text-slate-700 placeholder:font-bold"
-                />
+                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-emerald-400 transition-colors"><UserCircle2 size={22} /></div>
+                <input name="username" type="text" placeholder={`ID ${role.toUpperCase()}`} required className="w-full bg-white/5 border border-white/10 rounded-[1.5rem] py-6 pl-16 pr-6 text-white outline-none focus:border-emerald-500 focus:bg-white/10 transition-all font-black text-lg placeholder:text-slate-700 placeholder:font-bold" />
               </div>
 
               <div className="relative group">
-                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-emerald-400 transition-colors">
-                  <Lock size={22} />
-                </div>
-                <input 
-                  name="password" type={showPassword ? "text" : "password"} placeholder="KATA SANDI" required
-                  className="w-full bg-white/5 border border-white/10 rounded-[1.5rem] py-6 pl-16 pr-16 text-white outline-none focus:border-emerald-500 focus:bg-white/10 transition-all font-black text-lg tracking-[0.2em] placeholder:text-slate-700 placeholder:tracking-normal placeholder:font-bold"
-                />
-                <button 
-                  type="button" onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-200 transition-colors"
-                >
+                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-emerald-400 transition-colors"><Lock size={22} /></div>
+                <input name="password" type={showPassword ? "text" : "password"} placeholder="KATA SANDI" required className="w-full bg-white/5 border border-white/10 rounded-[1.5rem] py-6 pl-16 pr-16 text-white outline-none focus:border-emerald-500 focus:bg-white/10 transition-all font-black text-lg tracking-[0.2em] placeholder:text-slate-700 placeholder:tracking-normal placeholder:font-bold" />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-200 transition-colors">
                   {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
                 </button>
               </div>
             </div>
 
-            {/* ⚠️ ERROR MESSAGE */}
             <AnimatePresence mode="wait">
                {error && (
-                 <motion.div 
-                    initial={{ opacity: 0, height: 0 }} 
-                    animate={{ opacity: 1, height: 'auto' }} 
-                    exit={{ opacity: 0, height: 0 }}
-                    className="p-5 bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-black rounded-2xl flex items-center gap-4 italic uppercase tracking-wider"
-                 >
+                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="p-5 bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-black rounded-2xl flex items-center gap-4 italic uppercase tracking-wider">
                     <AlertTriangle size={20} className="shrink-0" /> {error}
                  </motion.div>
                )}
             </AnimatePresence>
 
-            {/* ⚡ SUBMIT BUTTON */}
-            <motion.button 
-              whileHover={{ scale: 1.02, boxShadow: "0 20px 40px -10px rgba(16,185,129,0.3)" }} 
-              whileTap={{ scale: 0.98 }}
-              disabled={loading || loginSuccess}
-              className={`w-full py-6 rounded-[1.5rem] font-black text-lg tracking-[0.3em] transition-all relative overflow-hidden group ${
-                loginSuccess 
-                ? 'bg-emerald-500 text-white' 
-                : 'bg-white text-slate-950 hover:bg-emerald-400'
-              }`}
+            <motion.button whileHover={{ scale: 1.02, boxShadow: "0 20px 40px -10px rgba(16,185,129,0.3)" }} whileTap={{ scale: 0.98 }} disabled={loading || loginSuccess}
+              className={`w-full py-6 rounded-[1.5rem] font-black text-lg tracking-[0.3em] transition-all relative overflow-hidden group ${loginSuccess ? 'bg-emerald-500 text-white' : 'bg-white text-slate-950 hover:bg-emerald-400'}`}
             >
-              <span className="relative z-10">
-                {loading ? (
-                  <Loader2 className="animate-spin mx-auto" size={28} />
-                ) : loginSuccess ? (
-                  'ACCESS GRANTED'
-                ) : (
-                  'AUTHENTICATE'
-                )}
-              </span>
+              <span className="relative z-10">{loading ? <Loader2 className="animate-spin mx-auto" size={28} /> : loginSuccess ? 'ACCESS GRANTED' : 'AUTHENTICATE'}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] pointer-events-none" />
             </motion.button>
-
           </form>
 
-          {/* Footer Mobile Only */}
-          <div className="lg:hidden mt-12 text-center text-slate-600 font-bold text-[10px] tracking-widest uppercase italic">
-            &copy; 2026 LexiMed Intelligence
-          </div>
+          <div className="lg:hidden mt-12 text-center text-slate-600 font-bold text-[10px] tracking-widest uppercase italic">&copy; 2026 LexiMed Intelligence</div>
         </div>
       </motion.div>
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes shimmer {
-          100% { transform: translateX(100%); }
-        }
-      `}} />
+      <style dangerouslySetInnerHTML={{ __html: `@keyframes shimmer { 100% { transform: translateX(100%); } }`}} />
     </div>
   );
 }
