@@ -170,17 +170,18 @@ const KnowledgeBase = () => {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
                                         <label className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Versi</label>
-                                        <input type="text" className="w-full p-4 md:p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold text-slate-700 text-sm md:text-base text-center outline-none focus:border-emerald-500 shadow-inner transition-all" value={formData.version} onChange={e => setFormData({...formData, version: e.target.value})} />
+                                        {/* Tinggi input text disamakan dengan kotak file di sebelahnya */}
+                                        <input type="text" className="w-full h-14 px-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold text-slate-700 text-sm text-center outline-none focus:border-emerald-500 shadow-inner transition-all" value={formData.version} onChange={e => setFormData({...formData, version: e.target.value})} />
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-[9px] md:text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] ml-2">File (PDF/DOCX)</label>
-                                        {/* Styled File Input */}
-                                        <div className="relative w-full h-full min-h-[50px]">
+                                        {/* FIX: Set fixed height h-14 agar seukuran dengan input Versi dan overflow hidden agar rapi */}
+                                        <div className="relative w-full h-14 overflow-hidden rounded-2xl">
                                             <input type="file" required
                                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
                                                 onChange={e => setFormData({...formData, file: e.target.files[0]})} 
                                             />
-                                            <div className={`absolute inset-0 w-full h-full border-2 border-dashed rounded-2xl flex items-center justify-center flex-col transition-all ${formData.file ? 'border-teal-500 bg-teal-50' : 'border-emerald-200 bg-emerald-50/50 hover:bg-emerald-50'}`}>
+                                            <div className={`absolute inset-0 w-full h-full border-2 border-dashed flex items-center justify-center transition-all ${formData.file ? 'border-teal-500 bg-teal-50' : 'border-emerald-200 bg-emerald-50/50 hover:bg-emerald-50'}`}>
                                                 {formData.file ? (
                                                     <span className="text-[10px] font-bold text-teal-800 truncate px-2 text-center w-full">{formData.file.name}</span>
                                                 ) : (
@@ -192,7 +193,7 @@ const KnowledgeBase = () => {
                                 </div>
 
                                 <button type="submit" disabled={uploading} 
-                                    className={`w-full py-5 rounded-2xl md:rounded-[1.5rem] font-black uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-3 shadow-xl mt-4 text-xs md:text-sm ${
+                                    className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-3 shadow-xl mt-6 text-xs md:text-sm ${
                                         uploading 
                                         ? 'bg-slate-800 text-slate-500 cursor-not-allowed shadow-none' 
                                         : 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white hover:from-emerald-400 hover:to-teal-500 shadow-emerald-900/30 active:scale-95'
