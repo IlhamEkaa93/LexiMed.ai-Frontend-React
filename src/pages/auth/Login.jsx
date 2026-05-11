@@ -49,13 +49,19 @@ export default function Login() {
 
       const data = await response.json();
 
-      // Jika password/username salah
-      if (!response.ok) {
-        throw new Error(data.message || "Kredensial tidak valid.");
+      // 1. PERBAIKAN LOGIKA: Cek apakah kredensial (username/password) benar-benar valid
+      // Tambahan `data.success === false` untuk menangkap error dari Laravel/Vercel
+      if (!response.ok || data.success === false) {
+        throw new Error(data.message || "Username atau Kata Sandi salah.");
       }
 
-      // PERBAIKAN LOGIKA: Validasi Role Case-Insensitive (Cegah Tembus Beda Role)
-      const fetchedRole = data.user?.role ? data.user.role.toLowerCase() : 'perawat';
+      // 2. Pastikan objek user benar-benar dikirim dari server
+      if (!data.user) {
+        throw new Error("Gagal memuat data pengguna.");
+      }
+
+      // 3. Validasi Role (Baru dieksekusi JIKA password sudah benar)
+      const fetchedRole = data.user.role ? data.user.role.toLowerCase() : 'perawat';
       const selectedRole = role.toLowerCase();
 
       // Jika role dari database tidak sama dengan tombol role yang diklik
@@ -63,12 +69,12 @@ export default function Login() {
         throw new Error(`AKSES DITOLAK: Akun ini terdaftar sebagai ${fetchedRole.toUpperCase()}`);
       }
 
-      // Jika aman, simpan token & arahkan ke halaman
+      // Jika lolos semua pengamanan, simpan token & arahkan ke dashboard
       localStorage.setItem('access_token', data.access_token);
       
       const userData = {
         id: username,
-        name: data.user?.name || username,
+        name: data.user.name || username,
         role: fetchedRole, 
       };
 
