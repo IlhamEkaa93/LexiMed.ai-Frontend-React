@@ -187,7 +187,7 @@ export default function LandingPage() {
                 <Activity size={28} className="md:w-8 md:h-8" />
               </div>
               <h4 className="text-lg md:text-xl font-black text-slate-900 group-hover:text-white mb-3">Modul Perawat</h4>
-              <p className="text-slate-500 group-hover:text-emerald-100 leading-relaxed text-sm">Pembuatan catatan keperawatan dan operan shift (Handover SBAR) otomatis dari narasi bebas atau suara.</p>
+              <p className="text-slate-500 group-hover:text-emerald-100 leading-relaxed text-sm">Pembuatan catatan keperawatan dan operan shift (Handover) otomatis dari narasi bebas atau suara.</p>
             </motion.div>
 
             <motion.div variants={fadeUp} className="group p-8 bg-slate-50 rounded-[2rem] md:rounded-[2.5rem] hover:bg-purple-600 transition-colors duration-300 border border-slate-100 hover:border-purple-600">
@@ -244,7 +244,7 @@ export default function LandingPage() {
               <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="bg-slate-900 p-8 md:p-10 rounded-[2rem] border border-slate-800 relative z-10 lg:mt-32 shadow-2xl shadow-emerald-900/20">
                 <div className="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center font-black text-xl mb-6 shadow-lg shadow-emerald-500/30">2</div>
                 <h3 className="text-xl md:text-2xl font-bold mb-3 text-white">Ekstraksi LLM</h3>
-                <p className="text-slate-400 text-sm md:text-base leading-relaxed">Mesin AI memahami konteks medis, merapikan data menjadi format standar (seperti SOAP atau SBAR), dan mencari diagnosis terkait di *Knowledge Base* RS.</p>
+                <p className="text-slate-400 text-sm md:text-base leading-relaxed">Mesin AI memahami konteks medis, merapikan data menjadi format standar (seperti SOAP), dan mencari diagnosis terkait di *Knowledge Base* RS.</p>
               </motion.div>
             </div>
 
