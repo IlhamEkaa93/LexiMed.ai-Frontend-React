@@ -49,20 +49,27 @@ export default function Login() {
 
       const data = await response.json();
 
+      // Jika password/username salah
       if (!response.ok) {
         throw new Error(data.message || "Kredensial tidak valid.");
       }
 
-      if (data.user && data.user.role !== role) {
-        throw new Error(`Akses Ditolak: Akun Anda adalah ${data.user.role.toUpperCase()}`);
+      // PERBAIKAN LOGIKA: Validasi Role Case-Insensitive (Cegah Tembus Beda Role)
+      const fetchedRole = data.user?.role ? data.user.role.toLowerCase() : 'perawat';
+      const selectedRole = role.toLowerCase();
+
+      // Jika role dari database tidak sama dengan tombol role yang diklik
+      if (fetchedRole !== selectedRole) {
+        throw new Error(`AKSES DITOLAK: Akun ini terdaftar sebagai ${fetchedRole.toUpperCase()}`);
       }
 
+      // Jika aman, simpan token & arahkan ke halaman
       localStorage.setItem('access_token', data.access_token);
       
       const userData = {
         id: username,
         name: data.user?.name || username,
-        role: data.user?.role || role, 
+        role: fetchedRole, 
       };
 
       localStorage.setItem('user', JSON.stringify(userData));
@@ -77,6 +84,7 @@ export default function Login() {
           manajemen: '/dashboard-manajemen',
           asisten: '/dashboard-asisten'
         };
+        // Fallback aman jika role tidak ditemukan di list routes
         navigate(routes[userData.role] || '/', { replace: true });
       }, 1500);
       
@@ -203,7 +211,7 @@ export default function Login() {
 
             <AnimatePresence mode="wait">
                {error && (
-                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="p-5 bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-black rounded-2xl flex items-center gap-4 italic uppercase tracking-wider">
+                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="p-5 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-black rounded-2xl flex items-center gap-4 italic uppercase tracking-wider">
                     <AlertTriangle size={20} className="shrink-0" /> {error}
                  </motion.div>
                )}
