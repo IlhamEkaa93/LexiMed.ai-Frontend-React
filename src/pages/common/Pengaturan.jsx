@@ -71,7 +71,7 @@ export default function Pengaturan() {
         className="mb-10"
       >
         <h1 className="text-4xl font-black text-slate-900 tracking-tight">Pengaturan</h1>
-        <p className="text-slate-500 font-medium mt-1 italic">Personalisasi identitas digital dan keamanan akses DARSI System.</p>
+        <p className="text-slate-500 font-medium mt-1 italic">Personalisasi identitas digital dan keamanan akses LexiMed.ai System.</p>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
