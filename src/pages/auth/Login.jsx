@@ -11,7 +11,9 @@ import {
   Lock, 
   ArrowRight, 
   Loader2,
-  AlertCircle
+  AlertCircle,
+  ShieldCheck,
+  Zap
 } from "lucide-react";
 
 const Login = () => {
