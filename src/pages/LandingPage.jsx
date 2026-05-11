@@ -180,7 +180,7 @@ export default function LandingPage() {
                 <Stethoscope size={28} className="md:w-8 md:h-8" />
               </div>
               <h4 className="text-lg md:text-xl font-black text-slate-900 group-hover:text-white mb-3">Modul Dokter</h4>
-              <p className="text-slate-500 group-hover:text-blue-100 leading-relaxed text-sm">Otomatisasi resume medis SOAP dan pencarian pedoman klinis (RAG) instan saat menangani pasien.</p>
+              <p className="text-slate-500 group-hover:text-blue-100 leading-relaxed text-sm">Otomatisasi resume medis SOAP dan SBAR pencarian pedoman klinis (RAG) instan saat menangani pasien.</p>
             </motion.div>
 
             <motion.div variants={fadeUp} className="group p-8 bg-slate-50 rounded-[2rem] md:rounded-[2.5rem] hover:bg-emerald-600 transition-colors duration-300 border border-slate-100 hover:border-emerald-600">
