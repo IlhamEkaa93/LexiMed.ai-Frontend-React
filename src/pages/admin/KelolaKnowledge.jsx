@@ -10,6 +10,10 @@ const KnowledgeBase = () => {
     const [files, setFiles] = useState([]);
     const [uploading, setUploading] = useState(false);
     const [loading, setLoading] = useState(true);
+    
+    // State baru untuk simulasi teks RAG Embedding saat demo
+    const [uploadStep, setUploadStep] = useState('');
+
     const [formData, setFormData] = useState({
         title: '',
         category: 'SOP Pelayanan',
@@ -57,6 +61,7 @@ const KnowledgeBase = () => {
         if (!formData.file) return alert("Pilih file dokumen (PDF/DOCX) terlebih dahulu!");
         
         setUploading(true);
+        setUploadStep('Memparsing Dokumen PDF...');
         
         const data = new FormData();
         data.append('title', formData.title);
@@ -66,6 +71,15 @@ const KnowledgeBase = () => {
         data.append('file', formData.file);
 
         try {
+            // 🧠 SMART AI SIMULATION: Jeda visual agar proses Embedding RAG terlihat nyata saat presentasi
+            await new Promise(resolve => setTimeout(resolve, 800));
+            setUploadStep('Melakukan Chunking Data Text...');
+            await new Promise(resolve => setTimeout(resolve, 800));
+            setUploadStep('Mengonversi ke Vector Embeddings...');
+            await new Promise(resolve => setTimeout(resolve, 800));
+            setUploadStep('Menyimpan ke Vector Database...');
+
+            // Proses API Asli ke Backend Laravel
             await axios.post(`${API_URL}/knowledge`, data, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -74,7 +88,7 @@ const KnowledgeBase = () => {
                 }
             });
             
-            // Reset form
+            // Reset form setelah sukses
             setFormData({ title: '', category: 'SOP Pelayanan', version: '1.0', description: '', file: null });
             e.target.reset();
             fetchData();
@@ -83,6 +97,7 @@ const KnowledgeBase = () => {
             alert(err.response?.data?.message || "Gagal upload dokumen.");
         } finally {
             setUploading(false);
+            setUploadStep('');
         }
     };
 
@@ -200,7 +215,7 @@ const KnowledgeBase = () => {
                                     }`}
                                 >
                                     {uploading ? (
-                                        <><Loader2 className="animate-spin" size={18}/> Mengekstrak ke Vector DB...</>
+                                        <><Loader2 className="animate-spin" size={18}/> {uploadStep || "Mengekstrak..."}</>
                                     ) : (
                                         <><Database size={18} /> Sinkronisasi ke AI</>
                                     )}

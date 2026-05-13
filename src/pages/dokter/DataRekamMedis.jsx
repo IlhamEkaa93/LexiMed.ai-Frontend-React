@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Pill, Activity, Loader2, BrainCircuit, 
   Search, RefreshCw, UserCheck, Eye, Database, Clock, 
-  Heart, Thermometer, Droplets, Sparkles, ShieldCheck, FileText, ClipboardList
+  Heart, Thermometer, Droplets, Sparkles, ShieldCheck, FileText, ClipboardList, BookOpen
 } from 'lucide-react';
 
 export default function DataRekamMedis() {
@@ -129,7 +129,7 @@ export default function DataRekamMedis() {
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} 
         className="bg-white p-6 sm:p-8 rounded-[32px] shadow-sm border border-slate-200 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 relative overflow-hidden"
       >
-        <div className="flex flex-col md:flex-row items-center gap-5 z-10 w-full xl:w-auto">
+        <div className="flex flex-col md:flex-row items-center gap-5 z-10 w-full xl:w-auto shrink-0">
           {/* Avatar Inisial Pasien */}
           <div className={`w-16 h-16 shrink-0 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg ring-4 ${patient?.displayGender === 'Laki-Laki' ? 'bg-blue-600 ring-blue-50' : 'bg-pink-500 ring-pink-50'}`}>
             {patient?.name?.charAt(0)?.toUpperCase() || 'P'}
@@ -155,34 +155,41 @@ export default function DataRekamMedis() {
           </div>
         </div>
         
-        {/* --- ACTION BUTTONS (DIPERKECIL AGAR LEBIH RAPI & PAS) --- */}
-        <div className="flex flex-wrap xl:flex-nowrap gap-2 z-10 w-full xl:w-auto mt-4 xl:mt-0 justify-center md:justify-start">
+        {/* --- ACTION BUTTONS (DIPERKECIL & BISA DIGESER HORIZONTAL) --- */}
+        <div className="flex overflow-x-auto gap-2 z-10 w-full xl:w-auto mt-4 xl:mt-0 pb-2 xl:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           
           <button 
             onClick={loadInitialData} 
-            className="flex-1 sm:flex-none bg-slate-50 text-slate-600 px-4 py-2.5 rounded-full font-black text-[10px] sm:text-[11px] uppercase hover:bg-slate-100 hover:text-slate-800 transition-all flex items-center justify-center gap-1.5 border border-slate-200"
+            className="shrink-0 bg-slate-50 text-slate-600 px-4 py-2 rounded-full font-black text-[9px] sm:text-[10px] uppercase hover:bg-slate-100 hover:text-slate-800 transition-all flex items-center justify-center gap-1.5 border border-slate-200"
           >
             <RefreshCw size={14} className={isRefreshing ? "animate-spin text-blue-500" : "text-slate-400"} /> 
-            <span className="hidden sm:block">REFRESH</span>
+            <span>REFRESH</span>
           </button>
           
           <button 
             onClick={() => navigate('/input-klinis')} 
-            className="flex-1 sm:flex-none bg-[#0f172a] text-white px-5 py-2.5 rounded-full font-black text-[10px] sm:text-[11px] uppercase tracking-wider shadow-md shadow-slate-900/20 hover:-translate-y-0.5 hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-1.5"
+            className="shrink-0 bg-[#0f172a] text-white px-4 py-2 rounded-full font-black text-[9px] sm:text-[10px] uppercase tracking-wider shadow-md shadow-slate-900/20 hover:-translate-y-0.5 hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-1.5"
           >
             <BrainCircuit size={14} className="text-blue-400" /> UPDATE DATA
           </button>
 
           <button 
             onClick={() => navigate('/ringkasan')} 
-            className="flex-1 sm:flex-none bg-emerald-500 text-white px-5 py-2.5 rounded-full font-black text-[10px] sm:text-[11px] uppercase tracking-wider shadow-md shadow-emerald-500/30 hover:-translate-y-0.5 hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-1.5"
+            className="shrink-0 bg-emerald-500 text-white px-4 py-2 rounded-full font-black text-[9px] sm:text-[10px] uppercase tracking-wider shadow-md shadow-emerald-500/30 hover:-translate-y-0.5 hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-1.5"
           >
             <Sparkles size={14} className="text-emerald-100" /> RINGKASAN AI
           </button>
 
            <button 
+            onClick={() => navigate('/pedoman')} 
+            className="shrink-0 bg-amber-500 text-white px-4 py-2 rounded-full font-black text-[9px] sm:text-[10px] uppercase tracking-wider shadow-md shadow-amber-500/30 hover:-translate-y-0.5 hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-1.5"
+          >
+            <BookOpen size={14} className="text-amber-100" /> PEDOMAN KLINIS
+          </button>
+ 
+          <button 
             onClick={() => navigate('/resume')} 
-            className="flex-1 sm:flex-none bg-indigo-500 text-white px-5 py-2.5 rounded-full font-black text-[10px] sm:text-[11px] uppercase tracking-wider shadow-md shadow-indigo-500/30 hover:-translate-y-0.5 hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-1.5"
+            className="shrink-0 bg-indigo-500 text-white px-4 py-2 rounded-full font-black text-[9px] sm:text-[10px] uppercase tracking-wider shadow-md shadow-indigo-500/30 hover:-translate-y-0.5 hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-1.5"
           >
             <ClipboardList size={14} className="text-indigo-100" /> RESUME MEDIS
           </button>
@@ -277,7 +284,7 @@ export default function DataRekamMedis() {
                       <div className="absolute left-[-11px] top-0 w-5 h-5 bg-emerald-500 rounded-full ring-4 ring-emerald-50 shadow-md group-hover:bg-blue-500 group-hover:ring-blue-50 transition-colors"></div>
                       <div className="flex items-center gap-3 mb-4 text-xs font-bold text-slate-400">
                          <span className="text-[9px] font-black text-emerald-600 uppercase bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-100 group-hover:bg-blue-50 group-hover:text-blue-600 group-hover:border-blue-100 transition-colors">
-                           Visit Verified
+                            Visit Verified
                          </span>
                          <span>{new Date(item.created_at).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })} WIB</span>
                       </div>

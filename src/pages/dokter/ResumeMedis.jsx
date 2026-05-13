@@ -5,7 +5,7 @@ import {
   FileText, Printer, ShieldCheck, 
   Zap, RefreshCw, Loader2, ArrowLeft,
   CheckCircle2, Award, Fingerprint, Pill, CheckSquare,
-  Activity, Download
+  Activity, Download, Database
 } from 'lucide-react';
 
 export default function ResumeMedis() {
@@ -252,23 +252,30 @@ export default function ResumeMedis() {
 
       <div className="max-w-5xl mx-auto space-y-6">
         
-        {/* Navigasi & Kontrol Aksi */}
+        {/* Navigasi & Kontrol Aksi (DIPERBARUI MENJADI SCROLLABLE & RAPI) */}
         <nav className="flex flex-col xl:flex-row justify-between items-center bg-white p-4 md:p-6 rounded-[2rem] border border-slate-200 shadow-sm gap-4">
-          <button onClick={() => navigate('/ringkasan')} className="group flex items-center justify-center text-slate-500 hover:text-emerald-600 font-bold transition-all w-full xl:w-auto bg-slate-50 xl:bg-transparent p-3 xl:p-0 rounded-xl">
-            <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" /> Kembali ke Ringkasan
+          <button onClick={() => navigate('/ringkasan')} className="group shrink-0 flex items-center justify-center text-slate-500 hover:text-emerald-600 font-bold transition-all w-full xl:w-auto bg-slate-50 xl:bg-transparent p-3 xl:p-0 rounded-xl text-xs uppercase tracking-widest">
+            <ArrowLeft size={16} className="mr-2 group-hover:-translate-x-1 transition-transform" /> Ringkasan
           </button>
           
-          <div className="flex flex-wrap sm:flex-nowrap gap-3 w-full xl:w-auto">
-            <button onClick={handleUpdateAI} disabled={loading} className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 text-slate-600 px-5 py-3 rounded-xl font-bold hover:bg-slate-50 shadow-sm active:scale-95 disabled:opacity-50 transition-all uppercase tracking-widest text-[10px] md:text-xs">
+          {/* Container Tombol Flex & Bisa Digeser Horizontal */}
+          <div className="flex overflow-x-auto gap-3 w-full xl:w-auto pb-2 xl:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            
+            {/* TOMBOL BARU: DATA MEDIS */}
+            <button onClick={() => navigate('/data-medis')} className="shrink-0 flex items-center justify-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 px-5 py-3 rounded-xl font-bold hover:bg-blue-100 shadow-sm active:scale-95 transition-all uppercase tracking-widest text-[10px] md:text-xs">
+              <Database size={16} /> Data Medis
+            </button>
+
+            <button onClick={handleUpdateAI} disabled={loading} className="shrink-0 flex items-center justify-center gap-2 bg-white border border-slate-200 text-slate-600 px-5 py-3 rounded-xl font-bold hover:bg-slate-50 shadow-sm active:scale-95 disabled:opacity-50 transition-all uppercase tracking-widest text-[10px] md:text-xs">
               {loading ? <RefreshCw className="animate-spin" size={16} /> : <Zap size={16} className="text-amber-500" />} Update Data
             </button>
-            <button onClick={handlePrint} disabled={isPrinting} className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-slate-900 text-white px-5 py-3 rounded-xl font-bold hover:bg-slate-800 shadow-md active:scale-95 transition-all uppercase tracking-widest text-[10px] md:text-xs">
+            <button onClick={handlePrint} disabled={isPrinting} className="shrink-0 flex items-center justify-center gap-2 bg-slate-900 text-white px-5 py-3 rounded-xl font-bold hover:bg-slate-800 shadow-md active:scale-95 transition-all uppercase tracking-widest text-[10px] md:text-xs">
               {isPrinting ? <Loader2 className="animate-spin" size={16} /> : <Printer size={16} />} Cetak
             </button>
-            <button onClick={handleDownloadPDF} disabled={isExporting} className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 text-slate-700 px-5 py-3 rounded-xl font-bold hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 shadow-sm active:scale-95 transition-all uppercase tracking-widest text-[10px] md:text-xs">
+            <button onClick={handleDownloadPDF} disabled={isExporting} className="shrink-0 flex items-center justify-center gap-2 bg-white border border-slate-200 text-slate-700 px-5 py-3 rounded-xl font-bold hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 shadow-sm active:scale-95 transition-all uppercase tracking-widest text-[10px] md:text-xs">
               {isExporting ? <Loader2 className="animate-spin" size={16} /> : <Download size={16} />} Unduh PDF
             </button>
-            <button onClick={() => navigate('/approve')} className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-3 rounded-xl font-black hover:from-emerald-600 hover:to-emerald-700 shadow-lg shadow-emerald-500/30 active:scale-95 transition-all uppercase tracking-widest text-[10px] md:text-xs">
+            <button onClick={() => navigate('/approve')} className="shrink-0 flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-3 rounded-xl font-black hover:from-emerald-600 hover:to-emerald-700 shadow-lg shadow-emerald-500/30 active:scale-95 transition-all uppercase tracking-widest text-[10px] md:text-xs">
               <CheckCircle2 size={18} /> Approve
             </button>
           </div>

@@ -76,21 +76,11 @@ export default function AdminLayout() {
     { name: 'AI Governance', path: '/ai-governance', icon: <ShieldCheck size={20} />, roles: ['admin'] },
     
     // --- SECTION DOKTER ---
-    { name: 'Input Klinis', path: '/input-klinis', icon: <Sparkles size={20} />, roles: ['dokter'] },
     { name: 'Data Rekam Medis', path: '/data-medis', icon: <FileSearch size={20} />, roles: ['dokter'] },
-    { name: 'Pedoman Klinis AI', path: '/pedoman', icon: <BookOpen size={20} />, roles: ['dokter'] }, 
-    { name: 'Ringkasan Medis AI', path: '/ringkasan', icon: <ClipboardList size={20} />, roles: ['dokter'] },
-    { name: 'Resume Medis', path: '/resume', icon: <FileText size={20} />, roles: ['dokter'] },
-    { name: 'Approve Final', path: '/approve', icon: <CheckSquare size={20} />, roles: ['dokter'] },
     
     // --- SECTION ASISTEN ---
     { name: 'Pemeriksaan Awal', path: '/asisten/input-pemeriksaan', icon: <Stethoscope size={20} />, roles: ['asisten'] },
     
-    // --- SECTION PERAWAT ---
-    { name: 'Tambah Catatan', path: '/tambah-catatan', icon: <FileEdit size={20} />, roles: ['perawat'] },
-    { name: 'Ringkasan Shift AI', path: '/handover', icon: <Activity size={20} />, roles: ['perawat'] },
-    { name: 'Draft Dokumentasi', path: '/draft-dokumentasi', icon: <BrainCircuit size={20} />, roles: ['perawat'] }, 
-    { name: 'Verifikasi Laporan', path: '/validasi-ai', icon: <FileSignature size={20} />, roles: ['perawat'] },
     
     // --- SECTION RADIOLOGI ---
     { name: 'Input Radiologi', path: '/radiologi/input', icon: <Cpu size={20} />, roles: ['radiologi'] },

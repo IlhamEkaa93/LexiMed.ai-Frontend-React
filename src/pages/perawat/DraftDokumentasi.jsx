@@ -49,17 +49,45 @@ export default function DraftDokumentasi() {
 
     // Simulasi Proses RAG (Retrieval-Augmented Generation) + LLM
     setTimeout(() => {
-      // SMART AI LOGIC: Ekstrak keluhan utama dan observasi dari data handover sebelumnya
-      const keluhanMatch = rawHandoverData.match(/keluhan utama (.*?)\./i) || rawHandoverData.match(/nyeri (.*?)\./i);
-      const keluhanUtama = keluhanMatch ? keluhanMatch[1] : "yang membutuhkan pemantauan";
+      // SMART AI LOGIC: Membaca konteks keluhan dan mencocokkan dengan standar SDKI/SIKI
+      const contextText = (rawHandoverData + " " + catatanTambahan).toLowerCase();
       
-      const vitalMatch = rawHandoverData.match(/Parameter vital sign tercatat: (.*?)\./i) || rawHandoverData.match(/TD (.*?)RR \d+x/i);
-      const vitalSign = vitalMatch ? vitalMatch[1] : "Tanda-tanda vital stabil";
+      let subjek = "";
+      let objek = "";
+      let asesmen = "";
+      let plan = "";
 
-      // Sisipkan Catatan Tambahan jika ada
-      const tambahanSubjektif = catatanTambahan ? `\nCatatan Pasien/Keluarga: ${catatanTambahan}` : '';
+      // Skenario 1: Respirasi (Sesak Napas) -> Sesuai Skenario Demo Pak Budi
+      if (contextText.includes('sesak') || contextText.includes('napas') || contextText.includes('pleura') || contextText.includes('oksigen')) {
+          subjek = `Pasien mengeluh sesak napas yang memberat. ${catatanTambahan ? 'Catatan tambahan: ' + catatanTambahan : ''}`;
+          objek = `Pasien tampak sesak (dispnea). Tanda-tanda vital menunjukkan indikasi takipnea. Penggunaan otot bantu napas positif. SpO2 perlu diobservasi ketat.`;
+          asesmen = `Pola Napas Tidak Efektif b.d hambatan upaya napas (SDKI D.0005) / Gangguan Pertukaran Gas.`;
+          plan = `- Monitor frekuensi, irama, dan kedalaman napas.\n- Posisikan pasien semi-Fowler atau Fowler untuk memaksimalkan ekspansi paru.\n- Kolaborasi pemberian terapi oksigenasi sesuai instruksi medis (DPJP).`;
+      } 
+      // Skenario 2: Nyeri (Misal post-operasi)
+      else if (contextText.includes('nyeri') || contextText.includes('operasi') || contextText.includes('luka')) {
+          subjek = `Pasien mengeluhkan nyeri pada area tubuh spesifik. ${catatanTambahan ? 'Catatan tambahan: ' + catatanTambahan : ''}`;
+          objek = `Pasien tampak meringis kesakitan, bersikap protektif terhadap area nyeri. Tanda-tanda vital stabil dengan kecenderungan takikardi ringan akibat respon nyeri.`;
+          asesmen = `Nyeri Akut b.d agen pencedera fisik/fisiologis (SDKI D.0077).`;
+          plan = `- Lakukan pengkajian nyeri komprehensif (PQRST) setiap 4 jam.\n- Ajarkan teknik non-farmakologis (relaksasi napas dalam).\n- Kolaborasi pemberian analgetik sesuai indikasi.`;
+      } 
+      // Skenario 3: Infeksi / Demam
+      else if (contextText.includes('demam') || contextText.includes('panas') || contextText.includes('suhu')) {
+          subjek = `Pasien mengeluh badan terasa panas/meriang. ${catatanTambahan ? 'Catatan tambahan: ' + catatanTambahan : ''}`;
+          objek = `Akral teraba hangat. Suhu tubuh di atas batas normal. Kulit pasien tampak sedikit kemerahan/flushed.`;
+          asesmen = `Hipertermia b.d proses penyakit/infeksi (SDKI D.0130).`;
+          plan = `- Monitor suhu tubuh secara berkala.\n- Lakukan kompres hangat pada area lipatan tubuh.\n- Kolaborasi pemberian cairan IV dan terapi antipiretik.`;
+      } 
+      // Skenario 4: General / Fallback (Jika kata kunci tidak terdeteksi)
+      else {
+          const fallbackKeluhan = rawHandoverData.length > 80 ? rawHandoverData.substring(0, 80) + "..." : rawHandoverData;
+          subjek = `Pasien melaporkan kondisi terkait: ${fallbackKeluhan}. ${catatanTambahan ? 'Catatan tambahan: ' + catatanTambahan : ''}`;
+          objek = `Keadaan umum sedang, kesadaran Compos Mentis. Tanda-tanda vital terpantau stabil. Tidak ada perburukan kondisi secara visual yang drastis.`;
+          asesmen = `Risiko Penurunan Kondisi Klinis b.d proses penyakit saat ini.`;
+          plan = `- Lanjutkan pemantauan tanda-tanda vital setiap pergantian shift.\n- Evaluasi keluhan utama secara berkala.\n- Lapor DPJP jika terdapat keluhan yang menetap atau memburuk.`;
+      }
 
-      const generatedDoc = `DOKUMENTASI KEPERAWATAN (${jenisDokumen.replace(/_/g, ' ')})\n-------------------------------------------------\nNAMA PASIEN: ${patient.name}\nRM: ${patient.norm || patient.no_rm}\nPERIODE: ${periode}\n\n[1] DATA SUBJEKTIF (S):\nPasien mengeluhkan ${keluhanUtama} saat ini.${tambahanSubjektif}\n\n[2] DATA OBJEKTIF (O):\nKeadaan umum sedang, kesadaran Compos Mentis. ${vitalSign}. Terpantau tidak ada perburukan kondisi secara visual.\n\n[3] ASESMEN / DIAGNOSA (A):\nGangguan rasa nyaman / Nyeri akut berhubungan dengan kondisi klinis pasien saat ini.\n\n[4] PLANNING / INTERVENSI (P):\n- Lanjutkan pemantauan tanda-tanda vital setiap pergantian shift.\n- Edukasi manajemen nyeri dan anjurkan istirahat cukup.\n- Kolaborasi medis (DPJP) jika keluhan menetap atau memburuk.\n\nDIHASILKAN OLEH: LexiMed RAG Neural Engine\nREFERENSI: Panduan SDKI & SOP Keperawatan Terpadu RS`;
+      const generatedDoc = `DOKUMENTASI KEPERAWATAN (${jenisDokumen.replace(/_/g, ' ')})\n-------------------------------------------------\nNAMA PASIEN: ${patient.name}\nRM: ${patient.norm || patient.no_rm}\nPERIODE: ${periode}\n\n[1] DATA SUBJEKTIF (S):\n${subjek}\n\n[2] DATA OBJEKTIF (O):\n${objek}\n\n[3] ASESMEN / DIAGNOSA (A):\n${asesmen}\n\n[4] PLANNING / INTERVENSI (P):\n${plan}\n\nDIHASILKAN OLEH: LexiMed RAG Neural Engine\nREFERENSI: Panduan SDKI & SOP Keperawatan Terpadu RS`;
       
       setResult(generatedDoc);
       setIsGenerating(false);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // 1. TAMBAHKAN IMPORT NAVIGATE
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Sparkles, Save, Database, 
@@ -8,6 +9,7 @@ import {
 } from 'lucide-react';
 
 const InputKlinis = () => {
+    const navigate = useNavigate(); // 2. INISIALISASI NAVIGATE
     const [rawText, setRawText] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [activePatient, setActivePatient] = useState(null);
@@ -128,8 +130,12 @@ const InputKlinis = () => {
                 setRawText(''); // Bersihkan text area
                 if (isListening) toggleListening(); // Matikan mic jika masih menyala
                 
-                // Sembunyikan notifikasi sukses setelah 4 detik
-                setTimeout(() => setSaveStatus(null), 4000);
+                // 3. TAMBAHKAN FUNGSI KEMBALI KE DATA MEDIS
+                // Tahan 1.5 detik agar notifikasi sukses terbaca, lalu pindah otomatis
+                setTimeout(() => {
+                    setSaveStatus(null);
+                    navigate('/data-medis'); 
+                }, 1500);
             }
             
         } catch (error) {
@@ -230,7 +236,7 @@ const InputKlinis = () => {
                                     <div className="flex flex-col gap-1">
                                         <span>
                                             {saveStatus === 'success' 
-                                                ? 'Berhasil! Catatan medis tersinkronisasi ke PostgreSQL.' 
+                                                ? 'Berhasil! Mengalihkan kembali ke Data Medis...' 
                                                 : 'Gagal Menyimpan Data.'
                                             }
                                         </span>
